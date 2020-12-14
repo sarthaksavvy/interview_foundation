@@ -12,7 +12,6 @@ class GithubServiceTest extends TestCase
     {
         parent::setup();
         Github::shouldReceive('me->starred')
-        ->once()
         ->andReturn(['starred-repos'=>[]]);
     }
 
@@ -25,7 +24,7 @@ class GithubServiceTest extends TestCase
     {
         $token  = 'dummyToken';
         GithubService::invoke($token);
-        $this->assertNotNull(app()->config['github.main.token']);
+        $this->assertNotNull(app()->config['github.connections.main.token']);
     }
 
     /**

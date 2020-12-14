@@ -1,7 +1,7 @@
 <template>
     <div>
-        <TokenForm user="user" />
-        <StarredRepos user="user" />
+        <TokenForm :user="user" />
+        <StarredRepos :user="user" />
     </div>
 </template>
 

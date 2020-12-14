@@ -3,9 +3,17 @@
         <div class="card-header">Github Token</div>
 
         <div class="card-body">
-            <div v-if="user.token">
-                Show token here
-            </div>
+            <b-container v-if="userData.token">
+                <b-row align-h="between">
+                    <p>Your current token</p>
+                    <b-icon-trash-fill
+                        style="cursor:pointer"
+                        @click="removeToken"
+                        >Remove Token</b-icon-trash-fill
+                    >
+                </b-row>
+                <p class="alert alert-success mt-1">{{ userData.token }}</p>
+            </b-container>
             <b-form v-else @submit.prevent="handleForm">
                 <b-container>
                     <b-row>
@@ -41,18 +49,26 @@ export default {
         return {
             docLink:
                 "https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/creating-a-personal-access-token",
-            baseUrl: "http://localhost:8000/api",
             form: {
                 token: null
-            }
+            },
+            userData: {}
         };
+    },
+    created() {
+        this.userData = this.user;
     },
     methods: {
         handleForm() {
             axios
-                .post(`${this.baseUrl}/token`, this.form)
-                .then(res => {})
+                .post(`/token`, this.form)
+                .then(res => {
+                    this.userData.token = this.form.token;
+                })
                 .catch(() => {});
+        },
+        removeToken() {
+            axios.delete("/token").then(() => (this.userData.token = null));
         }
     }
 };

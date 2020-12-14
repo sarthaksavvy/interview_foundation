@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Services\GithubService;
+use Symfony\Component\HttpFoundation\Response;
 
 class TokenController extends Controller
 {
@@ -17,10 +17,29 @@ class TokenController extends Controller
      *
      * @return Array
      */
-    public function __invoke()
+    public function __invoke(Request $request)
     {
-        $token         = auth()->user()->token;
-        $githubService = GithubService::invoke($token);
-        return $githubService->fetchStarredRepos();
+        $request->validate(['token'=>'required|alpha_num']);
+
+        $this->updateTokenField($request->token);
+
+        return response($request->token, Response::HTTP_CREATED);
+    }
+
+    public function destroy()
+    {
+        auth()->user()->update(['token' => null]);
+        return response('deleted', Response::HTTP_NO_CONTENT);
+    }
+
+    protected function encryptToken($token)
+    {
+        return encrypt($token);
+    }
+
+    protected function updateTokenField($token)
+    {
+        $encryptedToken = $this->encryptToken($token);
+        auth()->user()->update(['token'=>$encryptedToken]);
     }
 }

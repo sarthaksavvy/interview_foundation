@@ -4,20 +4,31 @@
 
         <div class="card-body">
             <h3>Fetch Starred Repos</h3>
-            <b-button v-if="isLoading">
-                Getting Your Data
-            </b-button>
-            <b-button
-                v-else
-                variant="outline-primary"
-                :disabled="user.token == null"
-                @click.prevent="fetchRepos"
-            >
-                Get Starred Repos
-            </b-button>
+            <div v-if="starredRepos.length == 0">
+                <b-button v-if="isLoading">
+                    Getting Your Data <b-icon-stopwatch />
+                </b-button>
+                <b-button
+                    v-else
+                    variant="outline-primary"
+                    :disabled="user.token == null"
+                    @click.prevent="fetchRepos"
+                >
+                    Get Starred Repos
+                </b-button>
+            </div>
+
+            <div v-else>
+                <b-list-group>
+                    <b-list-group-item
+                        v-for="(repo, i) in starredRepos"
+                        :key="repo.id"
+                        >{{ i + 1 }} - {{ repo.html_url }}</b-list-group-item
+                    >
+                </b-list-group>
+            </div>
         </div>
         <b-toast id="error-toast" title="BootstrapVue" static no-auto-hide>
-            Hello, world! This is a toast message.
         </b-toast>
     </div>
 </template>
@@ -27,31 +38,29 @@ export default {
     props: ["user"],
     data() {
         return {
-            github_url: "",
             isLoading: false,
             starredRepos: []
         };
-    },
-    mounted() {
-        this.showToast();
     },
     methods: {
         fetchRepos() {
             this.isLoading = true;
             axios
-                .post(`${this.github_url}`)
+                .post(`/github/repo/starred`)
                 .then(res => {
                     this.starredRepos = res.data;
                     this.isLoading = false;
                 })
-                .catch(() => {
+                .catch(e => {
+                    this.showToast(e.response.data.error);
                     this.isLoading = false;
                 });
         },
-        showToast() {
-            this.$bvToast.toast("This is some issue", {
+        showToast(msg) {
+            this.$bvToast.toast(msg, {
                 title: "Error in fetching repos",
-                autoHideDelay: 5000
+                autoHideDelay: 5000,
+                variant: "danger"
             });
         }
     }
