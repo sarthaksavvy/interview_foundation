@@ -4,13 +4,7 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">Starred Repos</div>
-
-                <div class="card-body">
-                    <token-form user={{auth()->user()}} />
-                </div>
-            </div>
+            <base-component user={{auth()->user()}}/>
         </div>
     </div>
 </div>

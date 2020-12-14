@@ -25,7 +25,8 @@ Vue.use(IconsPlugin);
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
-Vue.component("token-form", require("./components/TokenForm.vue").default);
+// Vue.component("token-form", require("./components/TokenForm.vue"));
+// Vue.component("starred-repos", require("./components/StarredRepos.vue"));
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -33,6 +34,8 @@ Vue.component("token-form", require("./components/TokenForm.vue").default);
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
+import BaseComponent from "./components/BaseComponent";
 const app = new Vue({
-    el: "#app"
+    el: "#app",
+    components: { BaseComponent }
 });
