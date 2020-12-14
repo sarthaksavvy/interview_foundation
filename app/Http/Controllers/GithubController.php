@@ -21,6 +21,7 @@ class GithubController extends Controller
     {
         $token         = auth()->user()->token;
         $githubService = GithubService::invoke($token);
+
         try {
             return $githubService->fetchStarredRepos();
         } catch (\Exception $e) {

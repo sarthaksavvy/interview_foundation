@@ -40,4 +40,9 @@ class User extends Authenticatable
     {
         return  $value ? decrypt($value) : null;
     }
+
+    public function setTokenAttribute($value)
+    {
+        $this->attributes['token'] = encrypt($value);
+    }
 }

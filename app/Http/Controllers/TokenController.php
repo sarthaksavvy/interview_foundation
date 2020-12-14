@@ -21,7 +21,7 @@ class TokenController extends Controller
     {
         $request->validate(['token'=>'required|alpha_num']);
 
-        $this->updateTokenField($request->token);
+        auth()->user()->update(['token'=>$request->token]);
 
         return response($request->token, Response::HTTP_CREATED);
     }
@@ -30,16 +30,5 @@ class TokenController extends Controller
     {
         auth()->user()->update(['token' => null]);
         return response('deleted', Response::HTTP_NO_CONTENT);
-    }
-
-    protected function encryptToken($token)
-    {
-        return encrypt($token);
-    }
-
-    protected function updateTokenField($token)
-    {
-        $encryptedToken = $this->encryptToken($token);
-        auth()->user()->update(['token'=>$encryptedToken]);
     }
 }
